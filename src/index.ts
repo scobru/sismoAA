@@ -1,36 +1,13 @@
-import { Contract, ethers, providers } from "ethers";
+import { Contract, Signer, ethers, providers } from "ethers";
 import dotenv from "dotenv";
 import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
 import { keccak256 } from "ethers/lib/utils.js";
 
 dotenv.config();
 
-const contractAddress = "0x1b8C68DB4AaD130E687A04C61BCC04Fb0cE51F91"; // goerliBase
+const contractAddress = "0x34a428Afee5241f3861DB9Fa5067cfD919f9b6a9"; // goerliBase
 
 const contractABI: any[] = [
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "encryptedVaultId",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes32",
-        name: "appId",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes",
-        name: "walletInfo",
-        type: "bytes",
-      },
-    ],
-    name: "setWalletInfo",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
   {
     inputs: [],
     stateMutability: "nonpayable",
@@ -92,15 +69,41 @@ const contractABI: any[] = [
     stateMutability: "view",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "encryptedVaultId",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes32",
+        name: "appId",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "walletInfo",
+        type: "bytes",
+      },
+    ],
+    name: "setWalletInfo",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
 class SismoPKP {
   private contractAddress: string;
-  private externalProvider: providers.JsonRpcProvider;
+  private externalProvider: providers.JsonRpcProvider | Signer;
   private contract: Contract;
   private appId: string;
 
-  constructor(externalProvider: providers.JsonRpcProvider, appId: string) {
+  constructor(
+    externalProvider: providers.JsonRpcProvider | Signer,
+    appId: string
+  ) {
     this.contractAddress = contractAddress;
     this.externalProvider = externalProvider;
     this.contract = new Contract(
@@ -112,18 +115,22 @@ class SismoPKP {
   }
 
   async createPKP(vaultId: any) {
+    const signer = this.externalProvider;
+    console.log("signer", signer);
+    const contractWithSigner = this.contract.connect(signer);
+    console.log("contractWithSigner", contractWithSigner);
+
     const wallet = ethers.Wallet.createRandom();
+    console.log("wallet.address", wallet.address);
+
     const privateKey = wallet.privateKey;
     const publicKey = wallet.publicKey;
-    const encryptedPK = await this.encrypt(privateKey, vaultId);
-    const signer = this.externalProvider;
-    const contractWithSigner = this.contract.connect(signer);
-
-    console.log("wallet.address", wallet.address);
     console.log("publicKey", publicKey);
+
+    const encryptedPK = await this.encrypt(privateKey, vaultId);
     console.log("encryptedPK", encryptedPK);
+
     console.log("keccak256(vaultId)", keccak256(vaultId));
-    console.log("contractWithSigner", contractWithSigner);
 
     const encryptedPKJson = JSON.stringify(encryptedPK);
     console.log("Encrypted PK JSON:", encryptedPKJson);

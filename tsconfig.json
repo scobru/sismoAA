@@ -1,11 +1,14 @@
 {
-    "compilerOptions": {
-      "target": "ES2017",
-      "module": "commonjs",
-      "strict": true,
-      "esModuleInterop": true,
-      "outDir": "./dist",
-      "rootDir": "./src"
-    }
-  }
-  
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "./dist",
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"], // Add this line to include TypeScript files in the src directory
+  "exclude": ["node_modules", "dist"]
+}
