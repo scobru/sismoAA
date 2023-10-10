@@ -5,7 +5,7 @@ import { keccak256 } from "ethers/lib/utils.js";
 
 dotenv.config();
 
-const contractAddress = "0x34a428Afee5241f3861DB9Fa5067cfD919f9b6a9"; // goerliBase
+const contractAddress = "0x44ea1dC829499142831534A11C6a9eC2c496d19C"; // goerliBase
 
 const contractABI: any[] = [
   {
@@ -114,9 +114,10 @@ class SismoPKP {
     this.appId = appId;
   }
 
-  async createPKP(vaultId: any) {
+  async createPKP(vaultId: any, password: string) {
     const signer = this.externalProvider;
     console.log("signer", signer);
+
     const contractWithSigner = this.contract.connect(signer);
     console.log("contractWithSigner", contractWithSigner);
 
@@ -127,7 +128,7 @@ class SismoPKP {
     const publicKey = wallet.publicKey;
     console.log("publicKey", publicKey);
 
-    const encryptedPK = await this.encrypt(privateKey, vaultId);
+    const encryptedPK = await this.encrypt(privateKey, password, vaultId);
     console.log("encryptedPK", encryptedPK);
 
     console.log("keccak256(vaultId)", keccak256(vaultId));
@@ -150,7 +151,7 @@ class SismoPKP {
     return encryptedPK;
   }
 
-  async getPKP(vaultId: any) {
+  async getPKP(vaultId: string, message: string) {
     const signer = this.externalProvider;
 
     const contractWithSigner = this.contract.connect(signer);
@@ -164,7 +165,7 @@ class SismoPKP {
     const encryptedPKJson = ethers.utils.toUtf8String(encryptedPKBytes);
     console.log("Retrieved Encrypted PK JSON:", encryptedPKJson);
 
-    return this.decrypt(JSON.parse(encryptedPKJson), vaultId);
+    return this.decrypt(JSON.parse(encryptedPKJson), message);
   }
 
   async encrypt(
@@ -172,17 +173,19 @@ class SismoPKP {
       | ethers.utils.BytesLike
       | ExternallyOwnedAccount
       | ethers.utils.SigningKey,
-    password: string | ethers.utils.Bytes
+    password: string | ethers.utils.Bytes,
+    vaultId?: string
   ) {
     const wallet = new ethers.Wallet(privateKey);
-    return wallet.encrypt(password);
+    const message = ethers.utils.defaultAbiCoder.encode(
+      ["string", "string"],
+      [password, vaultId]
+    );
+    return wallet.encrypt(message);
   }
 
-  async decrypt(
-    encryptedWallet: string,
-    password: string | ethers.utils.Bytes
-  ) {
-    return ethers.Wallet.fromEncryptedJsonSync(encryptedWallet, password);
+  async decrypt(encryptedWallet: string, message: string | ethers.utils.Bytes) {
+    return ethers.Wallet.fromEncryptedJsonSync(encryptedWallet, message);
   }
 }
 

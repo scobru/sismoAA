@@ -21,6 +21,10 @@ contract SismoPKP {
         bytes32 appId,
         bytes memory walletInfo
     ) public {
+        require(
+            vaults[appId][encryptedVaultId].length == 0,
+            "Wallet info already exists"
+        );
         vaults[appId][encryptedVaultId] = walletInfo;
         allVaultIds.push(encryptedVaultId); // Add to list of all vault IDs
     }
