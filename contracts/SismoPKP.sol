@@ -48,8 +48,8 @@ contract SismoPKP {
         // ABI encode the four hashed fields together and then hash to create the master key
         bytes32 masterKey = keccak256(
             abi.encode(
-                /*  keccak256(abi.encode(vaultId)),
-                keccak256(abi.encode(twitterId)), */
+                keccak256(abi.encode(vaultId)),
+                keccak256(abi.encode(twitterId)),
                 keccak256(abi.encode(_guardian))
             )
         );
@@ -62,10 +62,10 @@ contract SismoPKP {
         bytes16 appId,
         bytes memory walletInfo
     ) external {
-        /* require(
+        require(
             vaults[appId][encryptedVaultId].length == 0,
             "Wallet info already exists"
-        ); */
+        );
 
         vaults[appId][encryptedVaultId] = walletInfo;
     }
