@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/SismoPKP.sol": {
+      "content": "/* \r\n   _____   _____    _____   __  __    ____             _____    _  __  _____  \r\n  / ____| |_   _|  / ____| |  \\/  |  / __ \\           |  __ \\  | |/ / |  __ \\ \r\n | (___     | |   | (___   | \\  / | | |  | |  ______  | |__) | | ' /  | |__) |\r\n  \\___ \\    | |    \\___ \\  | |\\/| | | |  | | |______| |  ___/  |  <   |  ___/ \r\n  ____) |  _| |_   ____) | | |  | | | |__| |          | |      | . \\  | |     \r\n |_____/  |_____| |_____/  |_|  |_|  \\____/           |_|      |_|\\_\\ |_|     \r\n\r\n*/\r\n\r\n// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ninterface ISismoVerifier {\r\n    function sismoVerify(\r\n        bytes memory sismoConnectResponse,\r\n        bytes16 appId,\r\n        address to\r\n    ) external view returns (uint256, uint256, bytes memory);\r\n}\r\n\r\ncontract SismoPKP {\r\n    mapping(bytes16 => mapping(bytes32 => bytes)) private vaults;\r\n\r\n    address public verifierContract;\r\n\r\n    constructor(address _verifierContract) {\r\n        verifierContract = _verifierContract;\r\n    }\r\n\r\n    function getPassKey(\r\n        bytes memory sismoConnectResponse,\r\n        bytes16 appId\r\n    ) external view returns (bytes memory) {\r\n        (, uint256 twitterId, bytes memory signedMessage) = ISismoVerifier(\r\n            verifierContract\r\n        ).sismoVerify(sismoConnectResponse, appId, address(msg.sender));\r\n\r\n        address _guardian = abi.decode(signedMessage, (address));\r\n        require(msg.sender == _guardian, \"WRONG_GUARDIAN\"); // Guardian check\r\n\r\n        // ABI encode the four hashed fields together and then hash to create the master key\r\n        bytes memory masterKey = abi.encode(\r\n            [\"uint256\", \"address\"],\r\n            twitterId,\r\n            _guardian\r\n        );\r\n\r\n        return masterKey;\r\n    }\r\n\r\n    function setWalletInfo(\r\n        bytes32 encryptedVaultId,\r\n        bytes16 appId,\r\n        bytes memory walletInfo\r\n    ) external {\r\n        /* require(\r\n            vaults[appId][encryptedVaultId].length == 0,\r\n            \"Wallet info already exists\"\r\n        ); */\r\n\r\n        vaults[appId][encryptedVaultId] = walletInfo;\r\n    }\r\n\r\n    function getWalletInfo(\r\n        bytes32 encryptedVaultId,\r\n        bytes16 appId\r\n    ) external view returns (bytes memory) {\r\n        return vaults[appId][encryptedVaultId];\r\n    }\r\n}\r\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "viaIR": true,
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

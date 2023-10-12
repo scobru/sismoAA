@@ -9,21 +9,22 @@ contract SismoVerifier is SismoConnect {
     function sismoVerify(
         bytes memory sismoConnectResponse,
         bytes16 _appId,
-        bytes32 _hash
-    ) external view returns (bytes memory, bytes memory) {
+        address _to
+    ) external view returns (uint256, uint256, bytes memory) {
         require(sismoConnectResponse.length > 0, "empty response");
 
         // Build authorization requests
-        AuthRequest[] memory auths = new AuthRequest[](1);
+        AuthRequest[] memory auths = new AuthRequest[](2);
 
         auths[0] = buildAuth(AuthType.VAULT);
+        auths[1] = buildAuth(AuthType.TWITTER);
 
         // Verify the response
         SismoConnectVerifiedResult memory result = verify({
             appId: _appId,
             responseBytes: sismoConnectResponse,
             auths: auths,
-            signature: buildSignature({message: abi.encode(_hash)})
+            signature: buildSignature({message: abi.encode(_to)})
         });
 
         bytes memory signedMessage = SismoConnectHelper.getSignedMessage(
@@ -43,9 +44,11 @@ contract SismoVerifier is SismoConnect {
         // --> vaultId = hash(userVaultSecret, appId)
         uint256 vaultId = SismoConnectHelper.getUserId(result, AuthType.VAULT);
 
-        // Convert the vaultId to bytes
-        bytes memory vaultIdBytes = abi.encodePacked(vaultId);
+        uint256 twitterId = SismoConnectHelper.getUserId(
+            result,
+            AuthType.TWITTER
+        );
 
-        return (vaultIdBytes, signedMessage);
+        return (vaultId, twitterId, signedMessage);
     }
 }
