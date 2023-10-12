@@ -1,6 +1,6 @@
 {
   "name": "sismo-pkp",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Library to store and retrieve data from the SismoPKP smart contract",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
