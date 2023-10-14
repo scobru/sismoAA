@@ -1,6 +1,8 @@
 import * as dotenv from "dotenv";
 import { HardhatUserConfig } from "hardhat/config";
 import "hardhat-deploy";
+import "hardhat-docgen";
+import "hardhat-gas-reporter";
 
 dotenv.config();
 
@@ -102,12 +104,6 @@ const config: HardhatUserConfig = {
     etherscan: {
       apiKey: `${etherscanApiKey}`,
     },
-  },
-  contractSizer: {
-    alphaSort: true,
-    disambiguatePaths: false,
-    runOnCompile: true,
-    strict: false,
   },
   docgen: {
     path: "./docs",

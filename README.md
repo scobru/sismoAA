@@ -3,7 +3,7 @@
 
 ## Description
 
-This SDK allows developers to create EVM addresses for all users of their app through the vaultId. It also allows the generation and retrieval of passkeys for added security.
+This SDK enables developers to generate EVM addresses for all users in their application through the vault ID. Additionally, it allows for the generation and retrieval of passkeys for enhanced security. The SDK also provides a set of methods for interacting with the SismoPKP smart contract.
 
 ## Installation
 
@@ -17,83 +17,89 @@ npm install sismoPKP
 import { JsonRpcProvider } from "ethers/providers";
 import SismoPKP from "@scobru/sismopkp";
 
-const provider = new JsonRpcProvider("URL_DEL_PROVIDER");
+const provider = new JsonRpcProvider("YOUR_PROVIDER_URL");
 const sismoPKP = new SismoPKP(provider, "yourAppId");
 ```
 
 ### Prepare Sismo Connect and Generate OTP
 
 ```javascript
-const { CONFIG, AUTHS, SIGNATURE_REQUEST, OTP } = await sismoPKP.prepareSismoConnect("yourAppId");
+const { CONFIG, AUTHS, SIGNATURE_REQUEST } = await sismoPKP.prepareSismoConnect("guardianAddress");
 ```
 
-### Create new address with PassKey
+### Create a New Address with PassKey
 
 ```javascript
-const createPKP = await sismoPKP.createPKP("sismoConnectResponse", "yourVaultId", "yourAppId", OTP);
+const createPKP = await sismoPKP.createPKP("vaultId", "twitterId", "guardianAddress");
 ```
 
-### Get stored address from vaultId
+### Retrieve Stored Address from vaultId
 
 ```javascript
-const decryptedPK = await sismoPKP.getPKP("sismoConnectResponse", "yourVaultId", "yourAppId", OTP);
-```
-
-### Create PassKey
-
-```javascript
-const createPassKey = await sismoPKP.createPassKey("sismoConnectResponse", "yourAppId", OTP);
-```
-
-### Get PassKey
-
-```javascript
-const getPassKey = await sismoPKP.getPassKey("sismoConnectResponse", "yourAppId", OTP);
+const decryptedPK = await sismoPKP.getPKP("vaultId", "twitterId", "guardianAddress");
 ```
 
 ## API
 
-### `prepareSismoConnect(_appId: string): Promise<any>`
+### Methods
 
-Prepares Sismo Connect and generates an OTP for use in other functions.
+#### `prepareSismoConnect(withdrawAddress: string): Promise<object>`
 
-#### Parameters
+Prepares the necessary configurations for Sismo Connect.
 
-- `_appId: string` - Your application ID.
+- **Parameters**
+  - `withdrawAddress: string`: The Ethereum address for withdrawal.
+  
+- **Returns**
+  - `Promise<object>`: An object containing Sismo Connect configurations.
 
-#### Returns
+#### `createPKP(vaultId: string, twitterId: string, guardianAddress: string): Promise<string>`
 
-- `Promise<any>` - A promise that resolves to an object containing the configuration, auth requests, signature request, and OTP.
+Generates a new EVM address, encrypts the private key, and stores it in the smart contract.
 
-### `createPKP(sismoConnectResponse: string, vaultId: string, appId: string, otp: string): Promise<any>`
+- **Parameters**
+  - `vaultId: string`: The vault ID.
+  - `twitterId: string`: The Twitter ID.
+  - `guardianAddress: string`: The guardian Ethereum address.
+  
+- **Returns**
+  - `Promise<string>`: Encrypted Private Key Pair (PKP).
 
-Creates a new private key, encrypts it using a passkey, and stores it in the Ethereum smart contract. Returns the encrypted private key.
+#### `getPKP(vaultId: string, twitterId: string, guardianAddress: string): Promise<string>`
 
-#### Parameters
+Retrieves and decrypts an encrypted private key from a given vault ID.
 
-- `sismoConnectResponse: string` - The Sismo Connect Response.
-- `vaultId: string` - The vaultId, to encrypt the PK.
-- `appId: string` - Your application ID.
-- `otp: string` - One-time password.
+- **Parameters**
+  - `vaultId: string`: The vault ID.
+  - `twitterId: string`: The Twitter ID.
+  - `guardianAddress: string`: The guardian Ethereum address.
+  
+- **Returns**
+  - `Promise<string>`: Decrypted Private Key Pair (PKP).
 
-#### Returns
+## Solidity Smart Contract
 
-- `Promise<any>` - A promise that resolves to the encrypted private key.
+The SDK interacts with a Solidity smart contract deployed on the Ethereum blockchain. The contract serves as a secure storage and retrieval mechanism for wallet information and provides functionalities for generating and verifying passkeys.
 
-### `getPKP(sismoConnectResponse: string, vaultId: string, appId: string, otp: string): Promise<any>`
+### Contract Interface: `ISismoVerifier`
 
-Retrieves an encrypted private key from the specified hash(vaultID) in the Ethereum smart contract and decrypts it using the passkey.
+A separate verifier contract should implement this interface. This contract is responsible for the verification of Sismo Connect responses.
 
-#### Parameters
+### Main Contract: `SismoPKP`
 
-- `sismoConnectResponse: string` - The Sismo Connect Response.
-- `vaultId: string` - The vaultId, to decrypt the PK.
-- `appId: string` - Your application ID.
-- `otp: string` - One-time password.
+The main contract contains the following public functions:
 
-#### Returns
+#### `getPassKey(bytes memory sismoConnectResponse, bytes16 appId) returns (bytes32)`
 
-- `Promise<any>` - A promise that resolves to the decrypted private key.
+This function takes a Sismo Connect response and an App ID as parameters and returns the master key, generated using the vault ID, Twitter ID, and guardian address.
+
+#### `setWalletInfo(bytes32 encryptedVaultId, bytes16 appId, bytes memory walletInfo)`
+
+This function allows you to set wallet information in the smart contract. It takes an encrypted vault ID, App ID, and the wallet information to be stored.
+
+#### `getWalletInfo(bytes32 encryptedVaultId, bytes16 appId) returns (bytes memory)`
+
+This function allows you to retrieve wallet information from the smart contract. It takes an encrypted vault ID and App ID as parameters and returns the stored wallet information.
 
 ## Links
 

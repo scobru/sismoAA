@@ -17,14 +17,23 @@ async function main() {
 
   console.log("Verifier deployed to:", verifier.address);
 
-  const sismoPKP = await deploy("SismoPKP", {
+  const SismoAAFactory = await deploy("SismoAAFactory", {
     from: deployer,
     args: [verifier.address],
     log: true,
     autoMine: true,
   });
 
-  console.log("SismoPKP deployed to:", sismoPKP.address);
+  console.log("SismoAAFactory deployed to:", SismoAAFactory.address);
+
+  const sismoEnrypted = await deploy("SismoEncrypted", {
+    from: deployer,
+    args: [],
+    log: true,
+    autoMine: true,
+  });
+
+  console.log("SismoPK deployed to:", sismoEnrypted.address);
 }
 
 main()
