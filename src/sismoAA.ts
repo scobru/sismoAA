@@ -1,15 +1,12 @@
 import SismoAAABI from "../artifacts/contracts/SismoAA.sol/SismoAA.json";
 import SismoAAFactoryABI from "../artifacts/contracts/SismoAAFactory.sol/SismoAAFactory.json";
 import { Contract, Signer, ethers, providers } from "ethers";
-import dotenv from "dotenv";
 import {
   AuthType,
   SignatureRequest,
   AuthRequest,
   SismoConnectConfig,
 } from "@sismo-core/sismo-connect-client";
-
-dotenv.config();
 
 export type TXCALL = {
   to: string;

@@ -26,16 +26,28 @@ export class SismoPK {
   }
 
   async createPK(vaultId: any, password: string) {
+    console.log("createPK");
     const signer = this.externalProvider;
     const contractWithSigner = this.contract.connect(signer);
     const wallet = ethers.Wallet.createRandom();
 
+    console.group("Wallet Info");
+    console.log("Address: ", wallet.address);
+    console.log("Private Key: ", wallet.privateKey);
+    console.log("Public Key: ", wallet.publicKey);
+    console.groupEnd();
+
     const privateKey = wallet.privateKey;
     const publicKey = wallet.publicKey;
 
-    const encryptedPK = await this.encrypt(privateKey, password, vaultId);
+    const encryptedPK = await this.encrypt(privateKey, password);
     const encryptedPKJson = JSON.stringify(encryptedPK);
     const encryptedPKBytes = ethers.utils.toUtf8Bytes(encryptedPKJson);
+
+    console.group("Encrypted Wallet Info");
+    console.log("Encrypted Private Key: ", encryptedPK);
+    console.log("Encrypted Public Key: ", publicKey);
+    console.groupEnd();
 
     const tx = await contractWithSigner.setWalletInfo(
       keccak256(vaultId),
@@ -43,11 +55,11 @@ export class SismoPK {
       encryptedPKBytes
     );
     await tx.wait();
-
     return encryptedPK;
   }
 
   async getPK(vaultId: string, message: string) {
+    console.log("getPK");
     const signer = this.externalProvider;
 
     const contractWithSigner = this.contract.connect(signer);
@@ -58,6 +70,10 @@ export class SismoPK {
 
     const encryptedPKJson = ethers.utils.toUtf8String(encryptedPKBytes);
 
+    console.group("Encrypted Wallet Info");
+    console.log("Encrypted Private Key: ", encryptedPKJson);
+    console.groupEnd();
+
     return this.decrypt(JSON.parse(encryptedPKJson), message);
   }
 
@@ -66,15 +82,12 @@ export class SismoPK {
       | ethers.utils.BytesLike
       | ExternallyOwnedAccount
       | ethers.utils.SigningKey,
-    password: string | ethers.utils.Bytes,
-    vaultId?: string
+    password: string | ethers.utils.Bytes
   ) {
+    console.log("encrypt");
     const wallet = new ethers.Wallet(privateKey);
-    const message = ethers.utils.defaultAbiCoder.encode(
-      ["string", "string"],
-      [password, vaultId]
-    );
-    return wallet.encrypt(message);
+    console.log("wallet", wallet);
+    return wallet.encrypt(password);
   }
 
   async decrypt(encryptedWallet: string, message: string | ethers.utils.Bytes) {
