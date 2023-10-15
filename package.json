@@ -1,12 +1,12 @@
 {
   "name": "@scobru/sismo-aa",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Library to store and retrieve data from the SismoPKP smart contract",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node src/SismoPKP.ts",
+    "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
