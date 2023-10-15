@@ -21,7 +21,7 @@ const factoryAddress = "0xFAb59D31B6fAEe4b29BdDD997b56607aFe66FF4B"; // goerliBa
 
 // Encryption and Decryption functions remain the same
 
-export default class SismoAA {
+export class SismoAA {
   private contractAddress: string;
   private externalProvider: providers.JsonRpcProvider | Signer;
   private contractFactory: Contract;

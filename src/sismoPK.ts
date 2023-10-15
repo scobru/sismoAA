@@ -1,15 +1,11 @@
 import { Contract, Signer, ethers, providers } from "ethers";
-import dotenv from "dotenv";
 import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
 import { keccak256 } from "ethers/lib/utils.js";
-
-dotenv.config();
-
 import SismoEncryptedABI from "../artifacts/contracts/SismoEncrypted.sol/SismoEncrypted.json";
 
 const contractAddress = "0x350Cf3e534bDF467b22CC5E3AABd737A43DbB208"; // goerliBase
 
-export default class SismoPK {
+export class SismoPK {
   private contractAddress: string;
   private externalProvider: providers.JsonRpcProvider | Signer;
   private contract: Contract;
