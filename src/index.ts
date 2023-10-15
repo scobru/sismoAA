@@ -1,2 +1,2 @@
-export * from "./sismoAA";
-export * from "./sismoPK";
+import SismoAA from "./sismoAA";
+import SismoPK from "./sismoAA";
