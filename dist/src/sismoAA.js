@@ -12,6 +12,10 @@ dotenv_1.default.config();
 const factoryAddress = "0xFAb59D31B6fAEe4b29BdDD997b56607aFe66FF4B"; // goerliBase
 // Encryption and Decryption functions remain the same
 class SismoAA {
+    contractAddress;
+    externalProvider;
+    contractFactory;
+    appId;
     constructor(externalProvider, appId) {
         this.contractAddress = factoryAddress;
         this.externalProvider = externalProvider;

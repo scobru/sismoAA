@@ -10,6 +10,10 @@ dotenv_1.default.config();
 const SismoEncrypted_json_1 = __importDefault(require("../artifacts/contracts/SismoEncrypted.sol/SismoEncrypted.json"));
 const contractAddress = "0x350Cf3e534bDF467b22CC5E3AABd737A43DbB208"; // goerliBase
 class SismoPK {
+    contractAddress;
+    externalProvider;
+    contract;
+    appId;
     constructor(externalProvider, appId) {
         this.contractAddress = contractAddress;
         this.externalProvider = externalProvider;

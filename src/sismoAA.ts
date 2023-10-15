@@ -11,7 +11,7 @@ import {
 
 dotenv.config();
 
-type TXCALL = {
+export type TXCALL = {
   to: string;
   value: string;
   data: string;
@@ -97,7 +97,7 @@ export default class SismoAA {
     }
   }
 
-  async execute(sismoConnectRespnse: string, vaultId: string, txCall: TXCALL) {
+  async execute(sismoConnectRespnse: string, vaultId: string, txCall: any) {
     try {
       const nonce = ethers.utils.randomBytes(32);
 
