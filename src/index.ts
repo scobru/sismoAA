@@ -1,2 +1,2 @@
-import SismoAA from "./sismoAA";
-import SismoPK from "./sismoAA";
+export { default as SismoAA } from "./sismoAA";
+export { default as SismoPK } from "./sismoPK";

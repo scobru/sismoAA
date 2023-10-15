@@ -9,7 +9,7 @@ import SismoEncryptedABI from "../artifacts/contracts/SismoEncrypted.sol/SismoEn
 
 const contractAddress = "0x350Cf3e534bDF467b22CC5E3AABd737A43DbB208"; // goerliBase
 
-class SismoPK {
+export default class SismoPK {
   private contractAddress: string;
   private externalProvider: providers.JsonRpcProvider | Signer;
   private contract: Contract;
@@ -85,5 +85,3 @@ class SismoPK {
     return ethers.Wallet.fromEncryptedJsonSync(encryptedWallet, message);
   }
 }
-
-export default SismoPK;
