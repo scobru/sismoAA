@@ -1,6 +1,6 @@
 {
-  "name": "sismo-pkp",
-  "version": "1.2.0",
+  "name": "@scobru/sismo-aa",
+  "version": "1.0.0",
   "description": "Library to store and retrieve data from the SismoPKP smart contract",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,6 @@
   "license": "MIT",
   "dependencies": {
     "@sismo-core/sismo-connect-client": "^0.0.23",
-    "bcrypt": "^5.1.1",
     "dotenv": "^10.0.0",
     "ethers": "^5.5.1",
     "forge-std": "^1.1.2",
@@ -35,5 +34,17 @@
     "hardhat-gas-reporter": "^1.0.9",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scobru/sismoAA.git"
+  },
+  "bugs": {
+    "url": "https://github.com/scobru/sismoAA/issues"
+  },
+  "homepage": "https://github.com/scobru/sismoAA#readme"
 }

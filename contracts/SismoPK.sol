@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract SismoEncrypted {
+contract SismoPK {
     mapping(bytes32 => mapping(bytes32 => bytes)) private vaults;
     bytes32[] public allVaultIds;
 

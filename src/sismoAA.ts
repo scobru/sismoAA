@@ -66,13 +66,16 @@ class SismoAA {
     try {
       const signer = this.externalProvider as Signer;
       const contractWithSigner = this.contractFactory.connect(signer);
+
       const tx = await contractWithSigner.createAA(
         ethers.utils.keccak256(vaultId)
       );
       await tx.wait();
+
       const fetchAA = await contractWithSigner.getAAForVaultId(
         ethers.utils.keccak256(vaultId)
       );
+
       return fetchAA;
     } catch (error) {
       console.error("Error in createPKP:", error);
@@ -83,9 +86,11 @@ class SismoAA {
     try {
       const signer = this.externalProvider as Signer;
       const contractWithSigner = this.contractFactory.connect(signer);
+
       const fetchAA = await contractWithSigner.getAAForVaultId(
         ethers.utils.keccak256(vaultId)
       );
+      
       return fetchAA;
     } catch (error) {
       console.error("Error in getPKP:", error);
