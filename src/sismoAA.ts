@@ -14,7 +14,7 @@ export type TXCALL = {
   data: string;
 };
 
-const factoryAddress = "0x14a0B865028B4C483c09b47073cAD2126c476267"; // goerliBase
+const factoryAddress = "0xAf86D03027234AFB80d84859D7A9E311FD086560"; // goerliBase
 
 // Encryption and Decryption functions remain the same
 

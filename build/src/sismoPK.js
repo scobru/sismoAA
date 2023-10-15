@@ -42,13 +42,13 @@ exports.__esModule = true;
 exports.SismoPK = void 0;
 var ethers_1 = require("ethers");
 var utils_js_1 = require("ethers/lib/utils.js");
-var SismoEncrypted_json_1 = __importDefault(require("../artifacts/contracts/SismoEncrypted.sol/SismoEncrypted.json"));
-var contractAddress = "0x350Cf3e534bDF467b22CC5E3AABd737A43DbB208"; // goerliBase
+var SismoPK_json_1 = __importDefault(require("../artifacts/contracts/SismoPK.sol/SismoPK.json"));
+var contractAddress = "0xD69CD918AA6B616A302eCF5975886a85512076Cf"; // goerliBase
 var SismoPK = /** @class */ (function () {
     function SismoPK(externalProvider, appId) {
         this.contractAddress = contractAddress;
         this.externalProvider = externalProvider;
-        this.contract = new ethers_1.Contract(this.contractAddress, SismoEncrypted_json_1["default"].abi, this.externalProvider);
+        this.contract = new ethers_1.Contract(this.contractAddress, SismoPK_json_1["default"].abi, this.externalProvider);
         this.appId = appId;
     }
     SismoPK.prototype.createPK = function (vaultId, password) {
@@ -57,16 +57,26 @@ var SismoPK = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        console.log("createPK");
                         signer = this.externalProvider;
                         contractWithSigner = this.contract.connect(signer);
                         wallet = ethers_1.ethers.Wallet.createRandom();
+                        console.group("Wallet Info");
+                        console.log("Address: ", wallet.address);
+                        console.log("Private Key: ", wallet.privateKey);
+                        console.log("Public Key: ", wallet.publicKey);
+                        console.groupEnd();
                         privateKey = wallet.privateKey;
                         publicKey = wallet.publicKey;
-                        return [4 /*yield*/, this.encrypt(privateKey, password, vaultId)];
+                        return [4 /*yield*/, this.encrypt(privateKey, password)];
                     case 1:
                         encryptedPK = _a.sent();
                         encryptedPKJson = JSON.stringify(encryptedPK);
                         encryptedPKBytes = ethers_1.ethers.utils.toUtf8Bytes(encryptedPKJson);
+                        console.group("Encrypted Wallet Info");
+                        console.log("Encrypted Private Key: ", encryptedPK);
+                        console.log("Encrypted Public Key: ", publicKey);
+                        console.groupEnd();
                         return [4 /*yield*/, contractWithSigner.setWalletInfo((0, utils_js_1.keccak256)(vaultId), (0, utils_js_1.keccak256)(this.appId), encryptedPKBytes)];
                     case 2:
                         tx = _a.sent();
@@ -84,24 +94,29 @@ var SismoPK = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        console.log("getPK");
                         signer = this.externalProvider;
                         contractWithSigner = this.contract.connect(signer);
                         return [4 /*yield*/, contractWithSigner.getWalletInfo((0, utils_js_1.keccak256)(vaultId), (0, utils_js_1.keccak256)(this.appId))];
                     case 1:
                         encryptedPKBytes = _a.sent();
                         encryptedPKJson = ethers_1.ethers.utils.toUtf8String(encryptedPKBytes);
+                        console.group("Encrypted Wallet Info");
+                        console.log("Encrypted Private Key: ", encryptedPKJson);
+                        console.groupEnd();
                         return [2 /*return*/, this.decrypt(JSON.parse(encryptedPKJson), message)];
                 }
             });
         });
     };
-    SismoPK.prototype.encrypt = function (privateKey, password, vaultId) {
+    SismoPK.prototype.encrypt = function (privateKey, password) {
         return __awaiter(this, void 0, void 0, function () {
-            var wallet, message;
+            var wallet;
             return __generator(this, function (_a) {
+                console.log("encrypt");
                 wallet = new ethers_1.ethers.Wallet(privateKey);
-                message = ethers_1.ethers.utils.defaultAbiCoder.encode(["string", "string"], [password, vaultId]);
-                return [2 /*return*/, wallet.encrypt(message)];
+                console.log("wallet", wallet);
+                return [2 /*return*/, wallet.encrypt(password)];
             });
         });
     };

@@ -44,7 +44,7 @@ var SismoAA_json_1 = __importDefault(require("../artifacts/contracts/SismoAA.sol
 var SismoAAFactory_json_1 = __importDefault(require("../artifacts/contracts/SismoAAFactory.sol/SismoAAFactory.json"));
 var ethers_1 = require("ethers");
 var sismo_connect_client_1 = require("@sismo-core/sismo-connect-client");
-var factoryAddress = "0xFAb59D31B6fAEe4b29BdDD997b56607aFe66FF4B"; // goerliBase
+var factoryAddress = "0xAf86D03027234AFB80d84859D7A9E311FD086560"; // goerliBase
 // Encryption and Decryption functions remain the same
 var SismoAA = /** @class */ (function () {
     function SismoAA(externalProvider, appId) {

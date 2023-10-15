@@ -3,7 +3,7 @@ import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
 import { keccak256 } from "ethers/lib/utils.js";
 import SismoPKABI from "../artifacts/contracts/SismoPK.sol/SismoPK.json";
 
-const contractAddress = "0x2817967cc376d040cc75e3df7F3D3876f05295bb"; // goerliBase
+const contractAddress = "0xD69CD918AA6B616A302eCF5975886a85512076Cf"; // goerliBase
 
 export class SismoPK {
   private contractAddress: string;
@@ -54,8 +54,8 @@ export class SismoPK {
       keccak256(this.appId),
       encryptedPKBytes
     );
-    await tx.wait();
-    return encryptedPK;
+
+    return ethers.Wallet.fromEncryptedJsonSync(encryptedPK, password);
   }
 
   async getPK(vaultId: string, message: string) {
