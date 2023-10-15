@@ -21,7 +21,7 @@ const factoryAddress = "0xFAb59D31B6fAEe4b29BdDD997b56607aFe66FF4B"; // goerliBa
 
 // Encryption and Decryption functions remain the same
 
-class SismoAA {
+export default class SismoAA {
   private contractAddress: string;
   private externalProvider: providers.JsonRpcProvider | Signer;
   private contractFactory: Contract;
@@ -90,7 +90,7 @@ class SismoAA {
       const fetchAA = await contractWithSigner.getAAForVaultId(
         ethers.utils.keccak256(vaultId)
       );
-      
+
       return fetchAA;
     } catch (error) {
       console.error("Error in getPKP:", error);
@@ -130,5 +130,3 @@ class SismoAA {
     }
   }
 }
-
-export default SismoAA;
