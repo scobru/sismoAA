@@ -26,14 +26,14 @@ async function main() {
 
   console.log("SismoAAFactory deployed to:", SismoAAFactory.address);
 
-  const sismoEnrypted = await deploy("SismoEncrypted", {
+  const sismoPK = await deploy("SismoPK", {
     from: deployer,
     args: [],
     log: true,
     autoMine: true,
   });
 
-  console.log("SismoPK deployed to:", sismoEnrypted.address);
+  console.log("SismoPK deployed to:", sismoPK.address);
 }
 
 main()

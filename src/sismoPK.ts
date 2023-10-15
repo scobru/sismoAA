@@ -1,9 +1,9 @@
 import { Contract, Signer, ethers, providers } from "ethers";
 import { ExternallyOwnedAccount } from "@ethersproject/abstract-signer";
 import { keccak256 } from "ethers/lib/utils.js";
-import SismoEncryptedABI from "../artifacts/contracts/SismoEncrypted.sol/SismoEncrypted.json";
+import SismoPKABI from "../artifacts/contracts/SismoPK.sol/SismoPK.json";
 
-const contractAddress = "0x350Cf3e534bDF467b22CC5E3AABd737A43DbB208"; // goerliBase
+const contractAddress = "0x2817967cc376d040cc75e3df7F3D3876f05295bb"; // goerliBase
 
 export class SismoPK {
   private contractAddress: string;
@@ -19,7 +19,7 @@ export class SismoPK {
     this.externalProvider = externalProvider;
     this.contract = new Contract(
       this.contractAddress,
-      SismoEncryptedABI.abi,
+      SismoPKABI.abi,
       this.externalProvider
     );
     this.appId = appId;
